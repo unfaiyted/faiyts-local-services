@@ -1,0 +1,238 @@
+version: "3.9"
+
+networks:
+  wg-network:
+    ipam:
+      config:
+        - subnet: 192.168.99.0/24
+services:
+  sonarr: # https://hub.docker.com/services/sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=998
+      - PGID=998
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/sonarr:/config
+      - /d/tv:/tv #optional
+      - /d/downloads:/downloads #optional
+    ports:
+      - 8987:8989
+    restart: unless-stopped
+  radarr: # https://hub.docker.com/r/linuxserver/radarr
+      image: lscr.io/linuxserver/radarr:latest
+      container_name: radarr
+      environment:
+        - PUID=998
+        - PGID=998
+        - TZ=America/Chicago
+      volumes:
+        - /d/config/radarr:/config
+        - /d/movies:/movies #optional
+        - /d/downloads:/downloads #optional
+      ports:
+        - 7876:7878
+      restart: unless-stopped
+  lidarr: # https://hub.docker.com/r/linuxserver/lidarr
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=998
+      - PGID=998
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/lidarr:/config
+      - /d/music:/music #optional
+      - /d/downloads:/downloads #optional
+    ports:
+      - 8684:8686
+    restart: unless-stopped
+  bazarr: # https://hub.docker.com/r/linuxserver/bazarr
+      image: lscr.io/linuxserver/bazarr:latest
+      container_name: bazarr
+      environment:
+        - PUID=998
+        - PGID=998
+        - TZ=America/Chicago
+      volumes:
+        - /d/config/bazarr:/config
+        - /d/movies:/movies #optional
+        - /d/tv:/tv #optional
+      ports:
+        - 6765:6767
+      restart: unless-stopped
+  readarr: # https://hub.docker.com/r/linuxserver/readarr
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=998
+      - PGID=998
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/readarr:/config
+      - /d/books:/books #optional
+      - /d/downloads:/downloads #optional
+    ports:
+      - 8785:8787
+    restart: unless-stopped
+#  plex: # https://hub.docker.com/r/linuxserver/plex:
+#    image: lscr.io/linuxserver/plex:latest
+#    container_name: plex
+#    network_mode: host
+#    environment:
+#      - PUID=998
+#      - PGID=998
+#      - VERSION=docker
+#      - PLEX_CLAIM=  #optional
+#    volumes:
+#      - /d/config/plex:/config
+#      - /d/tv:/tv
+#      - /d/movies:/movies
+#    restart: unless-stopped
+#  plex: # https://hub.docker.com/r/plexinc/pms-docker/
+#    image: plexinc/pms-docker
+#    container_name: plex
+#    hostname: faiyts-server
+#    environment:
+#      - PLEX_UID=998
+#      - PLEX_GID=998
+#      - TZ=America/Chicago
+#      - PLEX_CLAIM=claim-kPr_zVUe54q347etuq4C
+#      - ADVERTISE_ID=http://190.168.0.126:32400/
+#      - ALLOWED_NETWORKS=190.168.0.0/24
+#    volumes:
+#      - /d/config/plex/db:/config
+#      - /d/config/plex/transcode:/transcode
+#      - /d/movies:/movies
+#      - /d/tv:/tv
+#    ports:
+#      - "32398:32400/tcp"
+#      - "3003:3005/tcp"
+#      - "8322:8324/tcp"
+#      - "1898:1900/udp"
+#      - "32408:32410/udp"
+#      - "32410:32412/udp"
+#      - "32411:32413/udp"
+#      - "32412:32414/udp"
+#    restart: unless-stopped
+  overseerr:
+    image: lscr.io/linuxserver/overseerr:latest
+    container_name: overseerr
+    environment:
+      - PUID=998
+      - PGID=998
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/overseerr:/config
+    ports:
+      - 5053:5055
+    restart: unless-stopped
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=998
+      - PGID=998
+      - TZ=Europe/London
+      - WEBUI_PORT=8381
+    depends_on:
+      - gluetun
+    network_mode: service:gluetun
+    volumes:
+      - /d/config/qbittorrent:/config
+      - /d/downloads:/downloads
+#    ports:
+#      - 8381:8383
+#      - 6879:6881
+#      - 6879:6881/udp
+    restart: unless-stopped
+  organizr:
+      image: organizr/organizr
+      container_name: organizr
+      environment:
+        - PUID=998
+        - PGID=998
+        - TZ=America/Chicago
+      volumes:
+        - /d/config/organizr:/config
+      ports:
+        - 8078:80
+      restart: unless-stopped
+  surfshark:
+       image: ilteoood/docker-surfshark
+       container_name: surfshark
+       environment:
+         - SURFSHARK_USER=${SURFSHARK_USER}
+         - SURFSHARK_PASSWORD=${SURFSHARK_PASSWORD}
+         - SURFSHARK_COUNTRY=us
+         - SURFSHARK_CITY=houston
+         - CONNECTION_TYPE=udp
+         - LAN_NETWORK=190.168.0.0/24
+       cap_add:
+         - NET_ADMIN
+       devices:
+         - /dev/net/tun
+       ports:
+         - 9089:9091 #we open here the port for transmission, as this container will be the access point for the others
+       restart: unless-stopped
+       dns:
+         - -1.1.1.1
+  service_test:
+       image: byrnedo/alpine-curl
+       container_name: alpine
+       command: -L 'https://ipinfo.io'
+       depends_on:
+         - surfshark
+       network_mode: service:surfshark
+       restart: always
+  transmission:
+       image: linuxserver/transmission
+       container_name: transmission
+       environment:
+         - PUID=998
+         - PGID=998
+         - TZ=America/Chicago
+       ports:
+         - 9089:9091 #needed to access transmission's GUI
+       network_mode: service:surfshark
+       restart: unless-stopped
+  dozzle:
+    container_name: dozzle
+    image: amir18/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 9997:8080
+  gluetun: #VPN
+    image: qmcgaw/gluetun
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8381:8383 # Qbittorrent
+      - 6879:6881 # Qbittorrent
+      - 6879:6881/udp # QBittorrent
+      - 8179:8080 # Sabs
+    volumes:
+      - /d/config/gluetun:/gluetun
+     # command: update -enduser -providers surfshark
+    environment:
+#      - VPN_SERVICE_PROVIDER=private internet access
+       - VPN_SERVICE_PROVIDER=private internet access
+       - OPENVPN_USER=${PIA_USER}
+       - OPENVPN_PASSWORD=${PIA_PASSWORD}
+       - FIREWALL=off
+       - PRIVATE_INTERNET_ACCESS_VPN_PORT_FORWARDING=on
+       - PRIVATE_INTERNET_ACCESS_VPN_PORT_STATUS_FILE=/tml/gluetun/forwarded_port
+       - PUID=998
+       - PGID=998
+       - VPN_SERVICE_PROVIDER=surfshark
+       - OPENVPN_USER=${SURFSHARK_USER}
+       - OPENVPN_PASSWORD=${SURFSHARK_PASSWORD}
+       - SERVER_COUNTRIES=United States
+       - SERVER_CITIES=Dallas,Denver,Houston
+       - SERVER_HOSTNAMES=us-den.prod.surfshark.com
+       - VPN_TYPE=wireguard
+       - WIREGUARD_PRIVATE_KEY=${SURFSHARK_WIREGUARD_PRIVATE_KEY}
+       - WIREGUARD_ADDRESSES=210.102.44.88/16

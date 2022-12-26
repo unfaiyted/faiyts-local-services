@@ -1,0 +1,86 @@
+version: "3.9"
+
+
+
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    network_mode: service:wireguard
+    depends_on:
+      - wireguard
+    volumes:
+      - /d/config/sabnzbd:/config
+      - /d/downloads:/downloads #optional
+      - /d/downloads/incomplete:/incomplete-downloads #optional
+    # ports:
+     #  - 8181:8080
+    restart: unless-stopped
+  wireguard:
+    image: linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+#      - SERVERURL=us-den.prod.surfshark.com
+#      - SERVERPORT=51819
+#      - PEERDNS=auto
+      - PIA_USER=${PIA_USER}
+      - AUTOCONNECT=true
+      - PIA_PASS=${PIA_PASSWORD}
+      - VPN_PROTOCOL=wireguard
+    ports:
+      - 51819:51820/udp
+    volumes:
+      - /lib/modules:/lib/modules
+      - /d/config/wireguard:/config
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+      - net.ipv6.conf.all.disable_ipv6=1
+      - net.ipv6.conf.default.disable_ipv6=1
+    restart: unless-stopped
+  boringtun_old:
+    container_name: boringtun
+    image: ghcr.io/ntkme/boringtun:edge
+    cap_add:
+      - MKNOD
+      - NET_ADMIN
+      - NET_RAW
+    ports:
+      - 51820:51820/udp
+    volumes:
+      - /d/config/wireguard/wg0.conf:/etc/wireguard/wg0.conf
+  boringtun:
+    privileged: true
+    image: frankpetrilli/boringtun
+    container_name: boringtun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - "587:587/udp"
+    devices:
+      - "/dev/net/tun:/dev/net/tun"
+    volumes:
+      - "/d/config/wireguard/wg0.conf:/etc/wireguard/wg0.conf"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "400k"
+        max-file: "20"
+    environment:
+      INTERFACE_NAME: "wg0"
+      WG_SUDO: "1"
+      WG_QUICK_USERSPACE_IMPLEMENTATION: "/app/boringtun"
+    entrypoint: /bin/bash
+    command: -c "wg-quick up wg0 && sleep infinity"
+   # command:  apt install openresolv
+
+
