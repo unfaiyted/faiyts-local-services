@@ -14,9 +14,9 @@ services:
       - PGID=998
       - TZ=America/Chicago
     volumes:
-      - /d/config/sonarr:/config
-      - /d/tv:/tv #optional
-      - /d/downloads:/downloads #optional
+      - /volumes/d/config/sonarr:/config
+      - /volumes/d/tv:/tv #optional
+      - /volumes/d/downloads:/downloads #optional
     ports:
       - 8987:8989
     restart: unless-stopped
@@ -28,9 +28,9 @@ services:
         - PGID=998
         - TZ=America/Chicago
       volumes:
-        - /d/config/radarr:/config
-        - /d/movies:/movies #optional
-        - /d/downloads:/downloads #optional
+        - /volumes/d/config/radarr:/config
+        - /volumes/d/movies:/movies #optional
+        - /volumes/d/downloads:/downloads #optional
       ports:
         - 7876:7878
       restart: unless-stopped
@@ -42,9 +42,9 @@ services:
       - PGID=998
       - TZ=America/Chicago
     volumes:
-      - /d/config/lidarr:/config
-      - /d/music:/music #optional
-      - /d/downloads:/downloads #optional
+      - /volumes/d/config/lidarr:/config
+      - /volumes/d/music:/music #optional
+      - /volumes/d/downloads:/downloads #optional
     ports:
       - 8684:8686
     restart: unless-stopped
@@ -56,9 +56,9 @@ services:
         - PGID=998
         - TZ=America/Chicago
       volumes:
-        - /d/config/bazarr:/config
-        - /d/movies:/movies #optional
-        - /d/tv:/tv #optional
+        - /volumes/d/config/bazarr:/config
+        - /volumes/d/movies:/movies #optional
+        - /volumes/d/tv:/tv #optional
       ports:
         - 6765:6767
       restart: unless-stopped
@@ -70,9 +70,9 @@ services:
       - PGID=998
       - TZ=America/Chicago
     volumes:
-      - /d/config/readarr:/config
-      - /d/books:/books #optional
-      - /d/downloads:/downloads #optional
+      - /volumes/d/config/readarr:/config
+      - /volumes/d/books:/books #optional
+      - /volumes/d/downloads:/downloads #optional
     ports:
       - 8785:8787
     restart: unless-stopped
@@ -86,9 +86,9 @@ services:
 #      - VERSION=docker
 #      - PLEX_CLAIM=  #optional
 #    volumes:
-#      - /d/config/plex:/config
-#      - /d/tv:/tv
-#      - /d/movies:/movies
+#      - /volumes/d/config/plex:/config
+#      - /volumes/d/tv:/tv
+#      - /volumes/d/movies:/movies
 #    restart: unless-stopped
 #  plex: # https://hub.docker.com/r/plexinc/pms-docker/
 #    image: plexinc/pms-docker
@@ -102,10 +102,10 @@ services:
 #      - ADVERTISE_ID=http://190.168.0.126:32400/
 #      - ALLOWED_NETWORKS=190.168.0.0/24
 #    volumes:
-#      - /d/config/plex/db:/config
-#      - /d/config/plex/transcode:/transcode
-#      - /d/movies:/movies
-#      - /d/tv:/tv
+#      - /volumes/d/config/plex/db:/config
+#      - /volumes/d/config/plex/transcode:/transcode
+#      - /volumes/d/movies:/movies
+#      - /volumes/d/tv:/tv
 #    ports:
 #      - "32398:32400/tcp"
 #      - "3003:3005/tcp"
@@ -116,18 +116,7 @@ services:
 #      - "32411:32413/udp"
 #      - "32412:32414/udp"
 #    restart: unless-stopped
-  overseerr:
-    image: lscr.io/linuxserver/overseerr:latest
-    container_name: overseerr
-    environment:
-      - PUID=998
-      - PGID=998
-      - TZ=America/Chicago
-    volumes:
-      - /d/config/overseerr:/config
-    ports:
-      - 5053:5055
-    restart: unless-stopped
+
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -135,13 +124,13 @@ services:
       - PUID=998
       - PGID=998
       - TZ=Europe/London
-      - WEBUI_PORT=8381
+      - WEBUI_PORT=8383
     depends_on:
       - gluetun
     network_mode: service:gluetun
     volumes:
-      - /d/config/qbittorrent:/config
-      - /d/downloads:/downloads
+      - /volumes/d/config/qbittorrent:/config
+      - /volumes/d/downloads:/downloads
 #    ports:
 #      - 8381:8383
 #      - 6879:6881
@@ -155,7 +144,7 @@ services:
         - PGID=998
         - TZ=America/Chicago
       volumes:
-        - /d/config/organizr:/config
+        - /volumes/d/config/organizr:/config
       ports:
         - 8078:80
       restart: unless-stopped
@@ -204,35 +193,5 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 9997:8080
-  gluetun: #VPN
-    image: qmcgaw/gluetun
-    container_name: gluetun
-    cap_add:
-      - NET_ADMIN
-    ports:
-      - 8381:8383 # Qbittorrent
-      - 6879:6881 # Qbittorrent
-      - 6879:6881/udp # QBittorrent
-      - 8179:8080 # Sabs
-    volumes:
-      - /d/config/gluetun:/gluetun
-     # command: update -enduser -providers surfshark
-    environment:
-#      - VPN_SERVICE_PROVIDER=private internet access
-       - VPN_SERVICE_PROVIDER=private internet access
-       - OPENVPN_USER=${PIA_USER}
-       - OPENVPN_PASSWORD=${PIA_PASSWORD}
-       - FIREWALL=off
-       - PRIVATE_INTERNET_ACCESS_VPN_PORT_FORWARDING=on
-       - PRIVATE_INTERNET_ACCESS_VPN_PORT_STATUS_FILE=/tml/gluetun/forwarded_port
-       - PUID=998
-       - PGID=998
-       - VPN_SERVICE_PROVIDER=surfshark
-       - OPENVPN_USER=${SURFSHARK_USER}
-       - OPENVPN_PASSWORD=${SURFSHARK_PASSWORD}
-       - SERVER_COUNTRIES=United States
-       - SERVER_CITIES=Dallas,Denver,Houston
-       - SERVER_HOSTNAMES=us-den.prod.surfshark.com
-       - VPN_TYPE=wireguard
-       - WIREGUARD_PRIVATE_KEY=${SURFSHARK_WIREGUARD_PRIVATE_KEY}
-       - WIREGUARD_ADDRESSES=210.102.44.88/16
+
+ boringtun:
