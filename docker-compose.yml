@@ -64,7 +64,7 @@ services:
       # - SERVERPORT=51820
       #      - PEERDNS=auto
       #      - PIA_USER=${PIA_USER}
-     # - AUTOCONNECT=true
+      # - AUTOCONNECT=true
       #      - PIA_PASS=${PIA_PASSWORD}
       - VPN_PROTOCOL=wireguard
     ports:
@@ -121,125 +121,185 @@ services:
 
     # Finders
   sonarr: # https://hub.docker.com/services/sonarr
-      image: lscr.io/linuxserver/sonarr:latest
-      container_name: sonarr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=America/Chicago
-      volumes:
-        - /d/config/sonarr:/config
-        - /d/tv:/tv #optional
-        - /d/downloads:/downloads #optional
-      ports:
-        - 8989:8989
-      restart: unless-stopped
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/sonarr:/config
+      - /d/tv:/tv #optional
+      - /d/downloads:/downloads #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped
   radarr: # https://hub.docker.com/r/linuxserver/radarr
-      image: lscr.io/linuxserver/radarr:latest
-      container_name: radarr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=America/Chicago
-      volumes:
-        - /d/config/radarr:/config
-        - /d/movies:/movies #optional
-        - /d/downloads:/downloads #optional
-      ports:
-        - 7878:7878
-      restart: unless-stopped
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/radarr:/config
+      - /d/movies:/movies #optional
+      - /d/downloads:/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped
   lidarr: # https://hub.docker.com/r/linuxserver/lidarr
-      image: lscr.io/linuxserver/lidarr:latest
-      container_name: lidarr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=America/Chicago
-      volumes:
-        - /d/config/lidarr:/config
-        - /d/music:/music #optional
-        - /d/downloads:/downloads #optional
-      ports:
-        - 8686:8686
-      restart: unless-stopped
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/lidarr:/config
+      - /d/music:/music #optional
+      - /d/downloads:/downloads #optional
+    ports:
+      - 8686:8686
+    restart: unless-stopped
   bazarr: # https://hub.docker.com/r/linuxserver/bazarr
-      image: lscr.io/linuxserver/bazarr:latest
-      container_name: bazarr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=America/Chicago
-      volumes:
-        - /d/config/bazarr:/config
-        - /d/movies:/movies #optional
-        - /d/tv:/tv #optional
-      ports:
-        - 6767:6767
-      restart: unless-stopped
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/bazarr:/config
+      - /d/movies:/movies #optional
+      - /d/tv:/tv #optional
+    ports:
+      - 6767:6767
+    restart: unless-stopped
   readarr: # https://hub.docker.com/r/linuxserver/readarr
-      image: lscr.io/linuxserver/readarr:develop
-      container_name: readarr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=America/Chicago
-      volumes:
-        - /d/config/readarr:/config
-        - /d/books:/books #optional
-        - /d/downloads:/downloads #optional
-      ports:
-        - 8787:8787
-      restart: unless-stopped
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/readarr:/config
+      - /d/books:/books #optional
+      - /d/downloads:/downloads #optional
+    ports:
+      - 8787:8787
+    restart: unless-stopped
   overseerr:
-      image: lscr.io/linuxserver/overseerr:latest
-      container_name: overseerr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=America/Chicago
-      volumes:
-        - /d/config/overseerr:/config
-      ports:
-        - 5055:5055
-      restart: unless-stopped
+    image: lscr.io/linuxserver/overseerr:latest
+    container_name: overseerr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/overseerr:/config
+    ports:
+      - 5055:5055
+    restart: unless-stopped
   organizr:
-      image: organizr/organizr
-      container_name: organizr
-      environment:
-        - PUID=1000
-        - PGID=1000
-        - TZ=America/Chicago
-      volumes:
-        - /d/config/organizr:/config
-      ports:
-        - 80:80
-      restart: unless-stopped
+    image: organizr/organizr
+    container_name: organizr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /d/config/organizr:/config
+    ports:
+      - 80:80
+    restart: unless-stopped
   pihole:
-      container_name: pihole
-      image: pihole/pihole:latest
-      # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
-      ports:
-        - "53:53/tcp"
-        - "53:53/udp"
-        - "67:67/udp" # Only required if you are using Pi-hole as your DHCP server
-        - "8080:80/tcp"
-      environment:
-        TZ: 'America/Chicago'
-        # WEBPASSWORD: 'set a secure password here or it will be random'
-      # Volumes store your data between container upgrades
-      volumes:
-        - '/d/config/pihole/main:/etc/pihole'
-        - '/d/config/pihole/dns:/etc/dnsmasq.d'
-      #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
-      cap_add:
-        - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
-      restart: unless-stopped
-# Logging
+    container_name: pihole
+    image: pihole/pihole:latest
+    # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp" # Only required if you are using Pi-hole as your DHCP server
+      - "8080:80/tcp"
+    environment:
+      TZ: 'America/Chicago'
+      # WEBPASSWORD: 'set a secure password here or it will be random'
+    # Volumes store your data between container upgrades
+    volumes:
+      - '/d/config/pihole/main:/etc/pihole'
+      - '/d/config/pihole/dns:/etc/dnsmasq.d'
+    #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
+    cap_add:
+      - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
+    restart: unless-stopped
+  # Logging
 
-#  dozzle:
-#    container_name: dozzle
-#    image: amir18/dozzle:latest
+  #  dozzle:
+  #    container_name: dozzle
+  #    image: amir18/dozzle:latest
+  #    volumes:
+  #      - /var/run/docker.sock:/var/run/docker.sock
+  #    ports:
+  #      - 9999:8080
+
+  pseudotv:
+    container_name: pseudotv
+    image: defendore/pseudotv:dev
+    ports:
+      - 8000:8000
+    volumes:
+      - /d/config/pseudotv:/home/node/app/.pseudotv
+    restart: unless-stopped
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: calibre-web
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - DOCKER_MODS=linuxserver/mods:universal-calibre #optional
+      - OAUTHLIB_RELAX_TOKEN_SCOPE=1 #optional
+    volumes:
+      - /d/config/calibre:/config
+      - /d/books:/books
+    ports:
+      - 8083:8083
+    restart: unless-stopped
+#  letsencrypt:
+#    image: linuxserver/letsencrypt
+#    container_name: letsencrypt
+#    cap_add:
+#        - NET_ADMIN
+#    environment:
+#        - PUID=1000
+#        - PGID=1000
+#        - TZ=America/Chicago
+#        - URL=faiyts.media
+#        - SUBDOMAINS=www,movies,tv,books,read,router,vpn,block,plex,torrent,usenet,watch
+#        - VALIDATION=http
+#        - DNSPLUGIN=cloudflare #optional
+##        - DUCKDNSTOKEN=<token> #optional
+#        - EMAIL=me@faiyts.media #optional
+#        - DHLEVEL=2048 #optional
+#        - ONLY_SUBDOMAINS=false #optional
+#        - EXTRA_DOMAINS=<extradomains> #optional
+#        - STAGING=false #optional
 #    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
+#        - </path/to/appdata/config>:/config
 #    ports:
-#      - 9999:8080
+#        - 443:443
+#        - 80:80 #optional
+#    restart: unless-stopped
+
+# Ensures DNS Matches local public ip
+  dyndns:
+    container_name: dyndns
+    image: tunix/digitalocean-dyndns
+    environment:
+      - DIGITALOCEAN_TOKEN=${DIGITAL_OCEAN_TOKEN}
+      - DOMAIN=faiyts.media
+      - NAME=www;movies;tv;books;read;router;vpn;block;plex;torrent;usenet;watch
+      - SLEEP_INTERVAL=300
+      - REMOVE_DUPLICATES=true
