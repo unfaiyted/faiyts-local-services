@@ -21,15 +21,16 @@ services:
     depends_on:
       - wireguard
     volumes:
-      - /d/config/sabnzbd:/config
-      - /d/downloads:/downloads #optional
-      - /d/downloads/incomplete:/incomplete-downloads #optional
+      - /media/faiyt/f/config/sabnzbd:/config
+      - /media/faiyt/d/downloads:/downloads #optional
+      - /media/faiyt/d/downloads/incomplete:/incomplete-downloads #optional
     #    ports:
     #  - 9191:8080
     #       - 8181:8080
     restart: unless-stopped
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
+  # image: cr.hotio.dev/hotio/qbittorrent
     container_name: qbittorrent
     environment:
       - PUID=1000
@@ -40,8 +41,8 @@ services:
       - wireguard
     network_mode: service:wireguard
     volumes:
-      - /d/config/qbittorrent:/config
-      - /d/downloads:/downloads
+      - /media/faiyt/f/config/qbittorrent:/config
+      - /media/faiyt/d/downloads:/downloads
     #    ports:
     #      - 8381:8383
     #      - 6879:6881
@@ -54,7 +55,7 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - /d/download/youtube:/downloads
+      - /media/faiyt/d/downloads/youtube:/downloads
   # VPN
   wireguard:
     image: linuxserver/wireguard:latest
@@ -68,12 +69,6 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Chicago
-      #      - SERVERURL=us-den.prod.surfshark.com
-      # - SERVERPORT=51820
-      #      - PEERDNS=auto
-      #      - PIA_USER=${PIA_USER}
-      # - AUTOCONNECT=true
-      #      - PIA_PASS=${PIA_PASSWORD}
       - VPN_PROTOCOL=wireguard
     ports:
       - 51820:51820/udp
@@ -83,7 +78,7 @@ services:
       - 6881:6881/udp
     volumes:
       - /lib/modules:/lib/modules
-      - /d/config/wireguard:/config
+      - /media/faiyt/f/config/wireguard:/config
     sysctls:
       - net.ipv4.conf.all.src_valid_mark=1
     #      - net.ipv6.conf.all.disable_ipv6=1
@@ -100,9 +95,10 @@ services:
       - PGID=1000
       - TZ=America/Chicago
     volumes:
-      - /d/config/sonarr:/config
-      - /d/tv:/tv #optional
-      - /d/downloads:/downloads #optional
+      - /media/faiyt/f/config/sonarr:/config
+      - /media/faiyt/d/tv:/tv #optional
+      - /media/faiyt/e/tv:/e/tv #optional
+      - /media/faiyt/d/downloads:/downloads #optional
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -115,9 +111,10 @@ services:
       - PGID=1000
       - TZ=America/Chicago
     volumes:
-      - /d/config/radarr:/config
-      - /d/movies:/movies #optional
-      - /d/downloads:/downloads #optional
+      - /media/faiyt/f/config/radarr:/config
+      - /media/faiyt/g/movies:/movies #optional
+      - /media/faiyt/d/downloads:/downloads #optional
+     # - /media/faiyt/e/movies:/e/movies
     ports:
       - 7878:7878
     restart: unless-stopped
@@ -129,9 +126,9 @@ services:
       - PGID=1000
       - TZ=America/Chicago
     volumes:
-      - /d/config/lidarr:/config
-      - /d/music:/music #optional
-      - /d/downloads:/downloads #optional
+      - /media/faiyt/f/config/lidarr:/config
+      - /media/faiyt/d/music:/music #optional
+      - /media/faiyt/d/downloads:/downloads #optional
     ports:
       - 8686:8686
     restart: unless-stopped
@@ -143,9 +140,10 @@ services:
       - PGID=1000
       - TZ=America/Chicago
     volumes:
-      - /d/config/bazarr:/config
-      - /d/movies:/movies #optional
-      - /d/tv:/tv #optional
+      - /media/faiyt/f/config/bazarr:/config
+      - /media/faiyt/g/movies:/movies #optional
+      - /media/faiyt/d/tv:/tv #optional
+      - /media/faiyt/e/tv:/e/tv
     ports:
       - 6767:6767
     restart: unless-stopped
@@ -157,9 +155,9 @@ services:
       - PGID=1000
       - TZ=America/Chicago
     volumes:
-      - /d/config/readarr:/config
-      - /d/books:/books #optional
-      - /d/downloads:/downloads #optional
+      - /media/faiyt/f/config/readarr:/config
+      - /media/faiyt/g/books:/books #optional
+      - /media/faiyt/d/downloads:/downloads #optional
     ports:
       - 8787:8787
     restart: unless-stopped
@@ -171,7 +169,7 @@ services:
       - PGID=1000
       - TZ=America/Chicago
     volumes:
-      - /d/config/overseerr:/config
+      - /media/faiyt/f/config/overseerr:/config
     ports:
       - 5055:5055
     restart: unless-stopped
@@ -183,17 +181,17 @@ services:
       - PGID=1000
       - TZ=America/Chicago
     volumes:
-      - /d/config/organizr:/config
+      - /media/faiyt/f/config/organizr:/config
     ports:
       - 80:80
     restart: unless-stopped
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
-    # For DHCP it is recommended to remove these ports and instead add: network_mode: "host"
+    # For DHCP, it is recommended to remove these ports and instead add: network_mode: "host"
     ports:
-      - "53:53/tcp"
-      - "53:53/udp"
+      - "5335:53/tcp"
+      - "5335:53/udp"
       - "67:67/udp" # Only required if you are using Pi-hole as your DHCP server
       - "8080:80/tcp"
     environment:
@@ -201,8 +199,8 @@ services:
       # WEBPASSWORD: 'set a secure password here or it will be random'
     # Volumes store your data between container upgrades
     volumes:
-      - '/d/config/pihole/main:/etc/pihole'
-      - '/d/config/pihole/dns:/etc/dnsmasq.d'
+      - '/media/faiyt/f/config/pihole/main:/etc/pihole'
+      - '/media/faiyt/f/config/pihole/dns:/etc/dnsmasq.d'
     #   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
     cap_add:
       - NET_ADMIN # Required if you are using Pi-hole as your DHCP server, else not needed
@@ -219,31 +217,19 @@ services:
   ersatztv: #Fake TV
     container_name: ersatztv
     network_mode: host
-    image: jasongdove/ersatztv:latest-nvidia
-#    deploy:
-#      resources:
-#        reservations:
-#          devices:
-#            - driver: nvidia
-#              count: 1
-#              capabilities: [gpu]
+    image: jasongdove/ersatztv:develop-nvidia
     environment:
       - TZ=America/Chicago
     ports:
       - 8409:8409
-    #    deploy:
-    #      resources:
-    #        reservations:
-    #          devices:
-    #            - driver: nvidia
-    #              count: 1
-    #              capabilities: [ gpu ]
     volumes:
-      - /d/config/ersatztv:/root/.local/share/ersatztv
-      - /d/videos/:/media:ro
-      - /d/movies:/d/movies
-      - /d/tv:/d/tv
-      - /d/music:/d/music
+      - /media/faiyt/f/config/ersatztv:/root/.local/share/ersatztv
+      - /media/faiyt/d/videos/:/media:ro
+      - /media/faiyt/g/movies:/d/movies
+      - /media/faiyt/d/tv:/d/tv
+      - /media/faiyt/d/music:/d/music
+      - /media/faiyt/e/movies:/e/movies
+      - /media/faiyt/e/tv:/e/tv
     restart: unless-stopped
   calibre-web: # Book Reader App
     image: lscr.io/linuxserver/calibre-web:latest
@@ -255,8 +241,8 @@ services:
       - DOCKER_MODS=linuxserver/mods:universal-calibre #optional
       - OAUTHLIB_RELAX_TOKEN_SCOPE=1 #optional
     volumes:
-      - /d/config/calibre:/config
-      - /d/books:/books
+#      - /media/faiyt/f/config/calibre:/config
+      - /media/faiyt/d/books/written-library:/config
     ports:
       - 8083:8083
     restart: unless-stopped
@@ -270,7 +256,7 @@ services:
       - PGID=1000
       - TZ=America/Chicago
       - URL=faiyts.media
-      - SUBDOMAINS=www,movies,tv,books,subtitles,read,router,find,vpn,block,plex,torrent,usenet,watch,logs,channels
+      - SUBDOMAINS=www,movies,tv,books,subtitles,read,router,find,vpn,block,plex,torrent,usenet,watch,logs,channels,music,listen
       - VALIDATION=dns
       - DNSPLUGIN=digitalocean #optional
       #        - DUCKDNSTOKEN=<token> #optional
@@ -280,7 +266,7 @@ services:
     #        - EXTRA_DOMAINS=<extradomains> #optional
     #        - STAGING=false #optional
     volumes:
-      - /d/config/swag:/config
+      - /media/faiyt/f/config/swag:/config
     ports:
       - 443:443
     #        - 80:80 #optional
@@ -292,10 +278,9 @@ services:
     environment:
       - DIGITALOCEAN_TOKEN=${DIGITAL_OCEAN_TOKEN}
       - DOMAIN=faiyts.media
-      - NAME=www;movies;tv;books;read;router;vpn;subtitles;block;find;plex;torrent;usenet;watch;logs;channels
+      - NAME=www;movies;tv;books;read;router;vpn;subtitles;block;find;plex;torrent;usenet;watch;logs;channels;music;listen
       - SLEEP_INTERVAL=300
       - REMOVE_DUPLICATES=true
-
   plex:
     image: plexinc/pms-docker:plexpass
     container_name: plex
@@ -309,31 +294,85 @@ services:
       - NVIDIA_DRIVER_CAPABILITIES=compute,video,utility
       - PLEX_CLAIM=${PLEX_CLAIM}
     volumes:
-      - /d/config/plex:/config
-      - /d/config/plex/transcode:/transcode
-      - /d/tv:/d/tv
-      - /d/movies:/d/movies
-      - /d/music:/d/music
+      - /media/faiyt/f/config/plex:/config
+      - /media/faiyt/f/config/plex/transcode:/transcode
+      - /media/faiyt/d/tv:/d/tv
+      - /media/faiyt/g/movies:/d/movies
+      - /media/faiyt/d/music:/d/music
+      - /media/faiyt/e/movies:/e/movies
+      - /media/faiyt/e/tv:/e/tv
     restart: unless-stopped
-
-#docker create
-#–name=plex
-#–hostname=plex
-#–network=macvlan
-#–runtime=nvidia
-#–ip=192.168.1.24
-#–restart=unless-stopped
-#-e VERSION=latest
-#-e PUID=1000
-#-e PGID=1000
-#-e TZ=America/Chicago
-#–device=/dev/dri:/dev/dri
-#-e NVIDIA_VISIBLE_DEVICES=all
-#-e NVIDIA_DRIVER_CAPABILITIES=compute,video,utility
-#-e PLEX_TOKEN={your_token}
-#-v /mnt/zfs/storage/apps/plex/config:/config
-#-v /mnt/zfs/storage/apps/plex/data:/data
-#-v /mnt/zfs/storage/apps/headphones/music:/music
-#-v /mnt/zfs/storage/apps/plex/data:/transcode
-#linuxserver/plex:latest
-
+#  tdarr:
+#    container_name: tdarr
+#    image: ghcr.io/haveagitgat/tdarr:latest
+#    restart: unless-stopped
+#    network_mode: bridge
+#    ports:
+#      - 8265:8265 # webUI port
+#      - 8266:8266 # server port
+#      - 8267:8267 # Internal node port
+#      - 8268:8268 # Example extra node port
+#    environment:
+#      - TZ=Europe/London
+#      - PUID=1000
+#      - PGID=1000
+#      - UMASK_SET=002
+#      - serverIP=0.0.0.0
+#      - serverPort=8266
+#      - webUIPort=8265
+#      - internalNode=true
+#      - nodeID=MyInternalNode
+#    volumes:
+#      - /media/faiyt/f/config/tdarr/server:/app/server
+#      - /media/faiyt/f/config/tdarr/configs:/app/configs
+#      - /media/faiyt/f/config/tdarr/logs:/app/logs
+#      - /d:/d
+#      - /e:/e
+#      - /transcode_cache:/temp
+#    # node example
+#  tdarr-node:
+#      container_name: tdarr-node
+#      image: ghcr.io/haveagitgat/tdarr_node:latest
+#      restart: unless-stopped
+#      network_mode: service:tdarr
+#      environment:
+#        - TZ=Europe/London
+#        - PUID=1000
+#        - PGID=1000
+#        - UMASK_SET=002
+#        - nodeID=MainNode
+#        - serverIP=0.0.0.0
+#        - serverPort=8266
+#      volumes:
+#        - /media/faiyt/d/config/tdarr/configs:/app/configs
+#        - /media/faiyt/d/config/tdarr/logs:/app/logs
+#        - /transcode_cache:/temp
+#        - /d:/d
+#        - /e:/e
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    environment:
+      - AUDIOBOOKSHELF_UID=1000
+      - AUDIOBOOKSHELF_GID=1000
+    ports:
+      - 13378:80
+    volumes:
+      - /media/faiyt/f/books/audiobooks/:/audiobooks
+      - /media/faiyt/d/books/podcasts:/podcasts
+      - /media/faiyt/d/books/written:/written
+      - /media/faiyt/f/config/audiobookshelf/:/config
+      - /media/faiyt/f/config/audiobookshelf/metadata>:/metadata
+    restart: unless-stopped
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /media/faiyt/f/config/prowlarr:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
