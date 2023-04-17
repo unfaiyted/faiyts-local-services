@@ -4,6 +4,7 @@
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/dizquetv/images/Open-Commercial-Pack" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/dizquetv/images/closed-channel-logos" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/nextcloud-data/faiyt/files/Rebornbuddy64BETA 1.0.101.0/Plugins/repoBuddy" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/organizr/www/organizr" vcs="Git" />
   </component>
 </project>

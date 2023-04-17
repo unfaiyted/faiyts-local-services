@@ -90,6 +90,7 @@ services:
   sonarr: # https://hub.docker.com/services/sonarr
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
+    cpu_count: 4
     environment:
       - PUID=1000
       - PGID=1000
@@ -113,6 +114,8 @@ services:
     volumes:
       - /media/faiyt/f/config/radarr:/config
       - /media/faiyt/g/movies:/movies #optional
+      - /media/faiyt/e/movies:/e/movies #
+      - /media/faiyt/f/movies:/f/movies
       - /media/faiyt/d/downloads:/downloads #optional
      # - /media/faiyt/e/movies:/e/movies
     ports:
@@ -214,23 +217,23 @@ services:
     ports:
       - 9999:8080
     restart: unless-stopped
-  ersatztv: #Fake TV
-    container_name: ersatztv
-    network_mode: host
-    image: jasongdove/ersatztv:develop-nvidia
-    environment:
-      - TZ=America/Chicago
-    ports:
-      - 8409:8409
-    volumes:
-      - /media/faiyt/f/config/ersatztv:/root/.local/share/ersatztv
-      - /media/faiyt/d/videos/:/media:ro
-      - /media/faiyt/g/movies:/d/movies
-      - /media/faiyt/d/tv:/d/tv
-      - /media/faiyt/d/music:/d/music
-      - /media/faiyt/e/movies:/e/movies
-      - /media/faiyt/e/tv:/e/tv
-    restart: unless-stopped
+#  ersatztv: #Fake TV
+#    container_name: ersatztv
+#    network_mode: host
+#    image: jasongdove/ersatztv:develop-nvidia
+#    environment:
+#      - TZ=America/Chicago
+#    ports:
+#      - 8409:8409
+#    volumes:
+#      - /media/faiyt/f/config/ersatztv:/root/.local/share/ersatztv
+#      - /media/faiyt/d/videos/:/media:ro
+#      - /media/faiyt/g/movies:/d/movies
+#      - /media/faiyt/d/tv:/d/tv
+#      - /media/faiyt/d/music:/d/music
+#      - /media/faiyt/e/movies:/e/movies
+#      - /media/faiyt/e/tv:/e/tv
+#    restart: unless-stopped
   calibre-web: # Book Reader App
     image: lscr.io/linuxserver/calibre-web:latest
     container_name: calibre-web
@@ -256,10 +259,10 @@ services:
       - PGID=1000
       - TZ=America/Chicago
       - URL=faiyts.media
-      - SUBDOMAINS=www,movies,tv,books,subtitles,read,router,find,vpn,block,plex,torrent,usenet,watch,logs,channels,music,listen
+      - SUBDOMAINS=www,movies,tv,books,subtitles,read,router,find,vpn,block,plex,torrent,usenet,watch,logs,channels,music,listen,cloud
       - VALIDATION=dns
       - DNSPLUGIN=digitalocean #optional
-      #        - DUCKDNSTOKEN=<token> #optional
+    #        - DUCKDNSTOKEN=<token> #optional
       - EMAIL=me@faiyts.media #optional
     #        - DHLEVEL=2048 #optional
     #        - ONLY_SUBDOMAINS=false #optional
@@ -278,13 +281,14 @@ services:
     environment:
       - DIGITALOCEAN_TOKEN=${DIGITAL_OCEAN_TOKEN}
       - DOMAIN=faiyts.media
-      - NAME=www;movies;tv;books;read;router;vpn;subtitles;block;find;plex;torrent;usenet;watch;logs;channels;music;listen
+      - NAME=www;movies;tv;books;read;router;vpn;subtitles;block;find;plex;torrent;usenet;watch;logs;channels;music;listen;cloud
       - SLEEP_INTERVAL=300
       - REMOVE_DUPLICATES=true
   plex:
     image: plexinc/pms-docker:plexpass
     container_name: plex
     network_mode: host
+    cpu_count: 4
     environment:
       - PUID=1000
       - PGID=1000
@@ -300,6 +304,7 @@ services:
       - /media/faiyt/g/movies:/d/movies
       - /media/faiyt/d/music:/d/music
       - /media/faiyt/e/movies:/e/movies
+      - /media/faiyt/f/movies:/f/movies
       - /media/faiyt/e/tv:/e/tv
     restart: unless-stopped
 #  tdarr:
@@ -367,6 +372,7 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
+    cpu_count: 4
     environment:
       - PUID=1000
       - PGID=1000
@@ -375,4 +381,17 @@ services:
       - /media/faiyt/f/config/prowlarr:/config
     ports:
       - 9696:9696
+    restart: unless-stopped
+  nextcloud:
+    image: lscr.io/linuxserver/nextcloud:latest
+    container_name: nextcloud
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /media/faiyt/f/config/nextcloud/:/config
+      - /media/faiyt/f/config/nextcloud-data:/data
+    ports:
+      - 1443:443
     restart: unless-stopped

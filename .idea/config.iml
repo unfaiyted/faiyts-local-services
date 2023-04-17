@@ -3,6 +3,70 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud" isTestSource="false" packagePrefix="OC" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/aws/aws-crt-php/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/aws/aws-sdk-php/src" isTestSource="false" packagePrefix="Aws" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/beberlei/assert/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/christophwurst/id3parser/src" isTestSource="false" packagePrefix="ID3Parser" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/deepdiver/zipstreamer/src" isTestSource="false" packagePrefix="ZipStreamer" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/doctrine/cache/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/doctrine/deprecations/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/doctrine/lexer/lib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/fgrosse/phpasn1/lib" isTestSource="false" packagePrefix="FG" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/fusonic/linq/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/giggsey/libphonenumber-for-php/src" isTestSource="false" packagePrefix="libphonenumber" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/guzzlehttp/guzzle/src" isTestSource="false" packagePrefix="GuzzleHttp" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/icewind/searchdav/src" isTestSource="false" packagePrefix="SearchDAV" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/justinrainbow/json-schema/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/mexitek/phpcolors/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/mlocati/ip-lib/src" isTestSource="false" packagePrefix="IPLib" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/mtdowling/jmespath.php/src" isTestSource="false" packagePrefix="JmesPath" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/php-opencloud/openstack/src" isTestSource="false" packagePrefix="OpenStack" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/phpseclib/phpseclib" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/pimple/pimple/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/psr/log" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/punic/punic/code" isTestSource="false" packagePrefix="Punic" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/sabre/dav/lib" isTestSource="false" packagePrefix="Sabre" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/spomky-labs/base64url/src" isTestSource="false" packagePrefix="Base64Url" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/spomky-labs/cbor-php/src" isTestSource="false" packagePrefix="CBOR" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/thecodingmachine/safe/deprecated" isTestSource="false" packagePrefix="Safe" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/thecodingmachine/safe/generated" isTestSource="false" packagePrefix="Safe" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/thecodingmachine/safe/lib" isTestSource="false" packagePrefix="Safe" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/web-auth/cose-lib/src" isTestSource="false" packagePrefix="Cose" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/3rdparty/web-auth/webauthn-lib/src" isTestSource="false" packagePrefix="Webauthn" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/admin_audit/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/cloud_federation_api/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/comments/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/contactsinteraction/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/dashboard/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/dav/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/encryption/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/federatedfilesharing/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/federation/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/files/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/files_external/3rdparty" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/files_external/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/files_sharing/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/files_trashbin/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/files_versions/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/lookup_server_connector/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/oauth2/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/provisioning_api/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/settings/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/sharebymail/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/systemtags/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/text/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/twofactor_backupcodes/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/updatenotification/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/user_ldap/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/user_status/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/weather_status/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/apps/workflowengine/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/lib" isTestSource="false" packagePrefix="OC" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/lib/composer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/lib/private" isTestSource="false" packagePrefix="OC" />
+      <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/lib/public" isTestSource="false" packagePrefix="OCP" />
       <excludeFolder url="file://$MODULE_DIR$/dizquetv" />
       <excludeFolder url="file://$MODULE_DIR$/bazarr" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp.driveupload" />
@@ -24,6 +88,12 @@
       <excludeFolder url="file://$MODULE_DIR$/sabnzbd" />
       <excludeFolder url="file://$MODULE_DIR$/calibre" />
       <excludeFolder url="file://$MODULE_DIR$/gluetun" />
+      <excludeFolder url="file://$MODULE_DIR$/audiobookshelf" />
+      <excludeFolder url="file://$MODULE_DIR$/nextcloud" />
+      <excludeFolder url="file://$MODULE_DIR$/nextcloud-data" />
+      <excludeFolder url="file://$MODULE_DIR$/prowlarr" />
+      <excludeFolder url="file://$MODULE_DIR$/readarr" />
+      <excludeFolder url="file://$MODULE_DIR$/tdarr" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
