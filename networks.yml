@@ -247,3 +247,71 @@ services:
 #    volumes:
 #      - /d/config/dizquetv:/home/node/app/.dizquetv
 #    restart: unless-stopped
+
+
+#  ersatztv: #Fake TV
+#    container_name: ersatztv
+#    network_mode: host
+#    image: jasongdove/ersatztv:develop-nvidia
+#    environment:
+#      - TZ=America/Chicago
+#    ports:
+#      - 8409:8409
+#    volumes:
+#      - ${CONFIG_PATH}/ersatztv:/root/.local/share/ersatztv
+#      - ${D_DRIVE}/videos/:/media:ro
+#      - /media/faiyt/g/movies:/d/movies
+#      - ${D_DRIVE}/tv:/d/tv
+#      - ${D_DRIVE}/music:/d/music
+#      - ${E_DRIVE}/movies:/e/movies
+#      - ${E_DRIVE}/tv:/e/tv
+#    restart: unless-stopped
+
+
+#  tdarr:
+#    container_name: tdarr
+#    image: ghcr.io/haveagitgat/tdarr:latest
+#    restart: unless-stopped
+#    network_mode: bridge
+#    ports:
+#      - 8265:8265 # webUI port
+#      - 8266:8266 # server port
+#      - 8267:8267 # Internal node port
+#      - 8268:8268 # Example extra node port
+#    environment:
+#      - TZ=Europe/London
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - UMA${TZ}
+#      - serverIP=0.0.0.0
+#      - serverPort=8266
+#      - webUIPort=8265
+#      - internalNode=true
+#      - nodeID=MyInternalNode
+#    volumes:
+#      - ${CONFIG_PATH}/tdarr/server:/app/server
+#      - ${CONFIG_PATH}/tdarr/configs:/app/configs
+#      - ${CONFIG_PATH}/tdarr/logs:/app/logs
+#      - /d:/d
+#      - /e:/e
+#      - /transcode_cache:/temp
+#    # node example
+#  tdarr-node:
+#      container_name: tdarr-node
+#      image: ghcr.io/haveagitgat/tdarr_node:latest
+#      restart: unless-stopped
+#      network_mode: service:tdarr
+#      environment:
+#        - TZ=Europe/London
+#        - PUID=${PUID}
+#        - PGID=${PGID}
+#        - UMA${TZ}
+#        - nodeID=MainNode
+#        - serverIP=0.0.0.0
+#        - serverPort=8266
+#      volumes:
+#        - ${D_DRIVE}/config/tdarr/configs:/app/configs
+#        - ${D_DRIVE}/config/tdarr/logs:/app/logs
+#        - /transcode_cache:/temp
+#        - /d:/d
+#        - /e:/e

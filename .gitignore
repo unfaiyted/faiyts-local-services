@@ -27,3 +27,10 @@ prowlarr/
 nextcloud/
 nextcloud-data/
 audiobookshelf/
+netdata/
+netdataconfig/
+media/
+server.env
+mailserver.env
+*.env
+google-drive-cloud-config.json
