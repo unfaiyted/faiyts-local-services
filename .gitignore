@@ -30,6 +30,7 @@ audiobookshelf/
 netdata/
 netdataconfig/
 media/
+/mailserver/
 server.env
 mailserver.env
 *.env
