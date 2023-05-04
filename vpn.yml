@@ -1,0 +1,60 @@
+version: "3.9"
+
+
+networks:
+  vpn:
+    driver: bridge
+
+services:
+
+  gluetun:
+    container_name: gluetun
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - vpn
+    ports:
+        - 8383:8383
+        - 8181:8080
+    environment:
+      - VPN_SERVICE_PROVIDER=surfshark
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${SURFSHARK_SERVER_PRIVATE_KEY}
+      - WIREGUARD_ADDRESSES=10.14.0.2/16
+      - SERVER_CITIES=Dallas,Denver,Chicago,Houston
+
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    cpu_count: 4
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8383
+    depends_on:
+      - gluetun
+    network_mode: service:gluetun
+    volumes:
+      - ${CONFIG_PATH}/qbittorrent:/config
+      - ${F_DRIVE}/downloads:/downloads
+    restart: unless-stopped
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOCKER_MODS=linuxserver/mods:sabnzbd-par2cmdline-turbo # reduce cpu usage
+    network_mode: service:gluetun
+    cpu_count: 4
+    depends_on:
+      - gluetun
+    volumes:
+      - ${CONFIG_PATH}/sabnzbd:/config
+      - ${F_DRIVE}/downloads:/downloads #optional
+      - ${F_DRIVE}/downloads/incomplete:/incomplete-downloads #optional
+    restart: unless-stopped

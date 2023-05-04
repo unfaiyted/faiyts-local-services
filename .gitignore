@@ -35,3 +35,8 @@ server.env
 mailserver.env
 *.env
 google-drive-cloud-config.json
+
+/couchbase
+/mongodb
+/syncthing
+/.idea

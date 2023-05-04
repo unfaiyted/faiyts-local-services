@@ -2,8 +2,5 @@
   <profile version="1.0">
     <option name="myName" value="Project Default" />
     <inspection_tool class="JSHint" enabled="true" level="ERROR" enabled_by_default="true" />
-    <inspection_tool class="ShellCheck" enabled="true" level="ERROR" enabled_by_default="true">
-      <shellcheck_settings value="SC2039" />
-    </inspection_tool>
   </profile>
 </component>

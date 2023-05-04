@@ -3,29 +3,30 @@ version: "3.9"
 networks:
   backbone:
     driver: bridge
+  private:
+    external: true
+  vpn:
+    driver: bridge
 
 services:
-  # Downloaders
 
-  # Usenet
-  sabnzbd:
-    image: lscr.io/linuxserver/sabnzbd:latest
-    container_name: sabnzbd
+  gluetun:
+    container_name: gluetun
+    image: qmcgaw/gluetun
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - vpn
+    ports:
+      - 8383:8383
+      - 8181:8080
     environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-    network_mode: service:wireguard
-    cpu_count: 4
-    depends_on:
-      - wireguard
-    volumes:
-      - ${CONFIG_PATH}/sabnzbd:/config
-      - ${D_DRIVE}/downloads:/downloads #optional
-      - ${D_DRIVE}/downloads/incomplete:/incomplete-downloads #optional
-    restart: unless-stopped
+      - VPN_SERVICE_PROVIDER=surfshark
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=${SURFSHARK_SERVER_PRIVATE_KEY}
+      - WIREGUARD_ADDRESSES=10.14.0.2/16
+      - SERVER_CITIES=Dallas,Denver,Chicago,Houston
 
-  # Torrents
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -36,11 +37,30 @@ services:
       - TZ=${TZ}
       - WEBUI_PORT=8383
     depends_on:
-      - wireguard
-    network_mode: service:wireguard
+      - gluetun
+    network_mode: service:gluetun
     volumes:
       - ${CONFIG_PATH}/qbittorrent:/config
-      - ${D_DRIVE}/downloads:/downloads
+      - ${F_DRIVE}/downloads:/downloads
+    restart: unless-stopped
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - DOCKER_MODS=linuxserver/mods:sabnzbd-par2cmdline-turbo|ghcr.io/gilbn/theme.park:sabnzbd # reduce cpu usage
+      - TP_THEME=overseerr
+    network_mode: service:gluetun
+    cpu_count: 4
+    depends_on:
+      - gluetun
+    volumes:
+      - ${CONFIG_PATH}/sabnzbd:/config
+      - ${F_DRIVE}/downloads:/downloads #optional
+      - ${F_DRIVE}/downloads/incomplete:/incomplete-downloads #optional
     restart: unless-stopped
 
   metube: # Youtube DL
@@ -50,49 +70,28 @@ services:
     ports:
       - "8081:8081"
     volumes:
-      - ${D_DRIVE}/downloads/youtube:/downloads
+      - ${F_DRIVE}/downloads/youtube:/downloads
 
-  # VPN
-  wireguard:
-    image: linuxserver/wireguard:latest
-    container_name: wireguard
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    networks:
-      - backbone
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - VPN_PROTOCOL=wireguard
-    ports:
-      - 51820:51820/udp
-      - 8181:8080
-      - 8383:8383
-      - 6881:6881
-      - 6881:6881/udp
-    volumes:
-      - /lib/modules:/lib/modules
-      - ${CONFIG_PATH}/wireguard:/config
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
-    restart: unless-stopped
 
   # TV Episode Manager
   sonarr: # https://hub.docker.com/services/sonarr
     image: lscr.io/linuxserver/sonarr:latest
     container_name: sonarr
     cpu_count: 4
+    privileged: true
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
+      - TP_THEME=overseerr
     volumes:
       - ${CONFIG_PATH}/sonarr:/config
       - ${D_DRIVE}/tv:/tv #optional
-      - ${E_DRIVE}/tv:/e/tv #optional
-      - ${D_DRIVE}/downloads:/downloads #optional
+      - ${E_DRIVE}/tv:/e/tv #optionals
+      - ${F_DRIVE}/tv:/f/tv #optional
+      - ${H_DRIVE}/tv:/h/tv #optional
+      - ${F_DRIVE}/downloads:/downloads #optional
     ports:
       - 8989:8989
     restart: unless-stopped
@@ -106,12 +105,14 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:radarr
+      - TP_THEME=overseerr
     volumes:
       - ${CONFIG_PATH}/radarr:/config
       - ${G_DRIVE}/movies:/movies #optional
       - ${E_DRIVE}/movies:/e/movies #
       - ${F_DRIVE}/movies:/f/movies
-      - ${D_DRIVE}/downloads:/downloads #optional
+      - ${F_DRIVE}/downloads:/downloads #optional
      # - ${E_DRIVE}/movies:/e/movies
     ports:
       - 7878:7878
@@ -126,10 +127,12 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:lidarr
+      - TP_THEME=overseerr
     volumes:
       - ${CONFIG_PATH}/lidarr:/config
       - ${D_DRIVE}/music:/music #optional
-      - ${D_DRIVE}/downloads:/downloads #optional
+      - ${F_DRIVE}/downloads:/downloads #optional
     ports:
       - 8686:8686
     restart: unless-stopped
@@ -143,11 +146,19 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:bazarr
+      - TP_THEME=overseerr
     volumes:
+      # Volume mappings need to include all of sonarr and radarr so that it can move the subtitles there
       - ${CONFIG_PATH}/bazarr:/config
       - ${G_DRIVE}/movies:/movies #optional
+      - ${E_DRIVE}/movies:/e/movies #
+      - ${F_DRIVE}/movies:/f/movies
       - ${D_DRIVE}/tv:/tv #optional
-      - ${E_DRIVE}/tv:/e/tv
+      - ${E_DRIVE}/tv:/e/tv #optionals
+      - ${F_DRIVE}/tv:/f/tv #optional
+      - ${H_DRIVE}/tv:/h/tv #optional
+      - ${F_DRIVE}/downloads:/downloads #optional
     ports:
       - 6767:6767
     restart: unless-stopped
@@ -160,10 +171,12 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:readarr
+      - TP_THEME=overseerr
     volumes:
       - ${F_DRIVE}/config/readarr:/config
       - ${G_DRIVE}/books:/books #optional
-      - ${D_DRIVE}/downloads:/downloads #optional
+      - ${F_DRIVE}/downloads:/downloads #optional
     ports:
       - 8787:8787
     restart: unless-stopped
@@ -256,7 +269,7 @@ services:
       - PGID=${PGID}
       - TZ=${TZ}
       - URL=faiyts.media
-      - SUBDOMAINS=www,movies,tv,books,subtitles,read,router,find,vpn,block,plex,torrent,usenet,watch,logs,channels,music,listen,cloud,mail
+      - SUBDOMAINS=www,movies,tv,books,subtitles,read,router,find,vpn,block,plex,torrent,usenet,watch,logs,channels,music,listen,cloud,mail,db
       - VALIDATION=dns
       - DNSPLUGIN=digitalocean #optional
       - EMAIL=me@faiyts.media #optional
@@ -275,7 +288,7 @@ services:
     environment:
       - DIGITALOCEAN_TOKEN=${DIGITAL_OCEAN_TOKEN}
       - DOMAIN=faiyts.media
-      - NAME=www;movies;tv;books;read;router;vpn;subtitles;block;find;plex;torrent;usenet;watch;logs;channels;music;listen;cloud;mail
+      - NAME=www;movies;tv;books;read;router;vpn;subtitles;block;find;plex;torrent;usenet;watch;logs;channels;music;listen;cloud;mail;db
       - SLEEP_INTERVAL=300
       - REMOVE_DUPLICATES=true
 
@@ -283,6 +296,11 @@ services:
   plex:
     image: plexinc/pms-docker:plexpass
     container_name: plex
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [ gpu ]
     network_mode: host
     cpu_count: 8
     environment:
@@ -302,7 +320,9 @@ services:
       - ${E_DRIVE}/movies:/e/movies
       - ${F_DRIVE}/movies:/f/movies
       - ${E_DRIVE}/tv:/e/tv
+      - ${H_DRIVE}/tv:/h/tv
     restart: unless-stopped
+
 
   # Audio Book Manager
   audiobookshelf:
@@ -392,7 +412,7 @@ services:
     security_opt:
       - apparmor:unconfined
     volumes:
-      - ./netdataconfig/netdata:/etc/netdata
+      - ${CONFIG_PATH}/netdata:/etc/netdata
       - netdatalib:/var/lib/netdata
       - netdatacache:/var/cache/netdata
       - /etc/passwd:/host/etc/passwd:ro
@@ -400,6 +420,28 @@ services:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /etc/os-release:/host/etc/os-release:ro
+  # ...
+
+  # CouchDB
+  syncthing:
+    image: lscr.io/linuxserver/syncthing:latest
+    container_name: syncthing
+    hostname: syncthing #optional
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${CONFIG_PATH}/syncthing:/config
+      - /media/faiyt/:/media/faiyt/
+      - /home/faiyt/:/home/faiyt/
+    ports:
+      - 8384:8384
+      - 22000:22000/tcp
+      - 22000:22000/udp
+      - 21027:21027/udp
+    restart: unless-stopped
+
 
 volumes:
   netdataconfig:

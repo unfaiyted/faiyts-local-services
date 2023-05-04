@@ -98,7 +98,7 @@ services:
 #      - PLEX_UID=998
 #      - PLEX_GID=998
 #      - TZ=America/Chicago
-#      - PLEX_CLAIM=claim-kPr_zVUe54q347etuq4C
+#      - PLEX_CLAIM=
 #      - ADVERTISE_ID=http://190.168.0.126:32400/
 #      - ALLOWED_NETWORKS=190.168.0.0/24
 #    volumes:

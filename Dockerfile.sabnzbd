@@ -1,0 +1,3 @@
+FROM linuxserver/sabnzbd
+
+RUN apk update && apk add wireguard-tools

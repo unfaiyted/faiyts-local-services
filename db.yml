@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+
+#  couchbase:
+#    image: couchbase
+#    container_name: db
+#    cpu_count: 8
+#    ports:
+#      - "8091-8097:8091-8097"
+#      - "9123:9123"
+#      - "11207:11207"
+#      - "11210:11210"
+#      - "11280:11280"
+#      - "18091-18097:18091-18097"
+#    volumes:
+#      - ${CONFIG_PATH}/couchbase:/opt/couchbase/var/
+#    restart: unless-stopped
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      -  ${CONFIG_PATH}/mongodb:/data/db
+#    environment:
+#      - MONGO_INITDB_ROOT_USERNAME=admin
+#      - MONGO_INITDB_ROOT_PASSWORD=password
+
+  mongo-express:
+    image: mongo-express
+    links:
+      - mongodb
+    container_name: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+#      - ME_CONFIG_BASICAUTH_USERNAME=admin
+#      - ME_CONFIG_BASICAUTH_PASSWORD=password
+
+#networks:
+#  default:
+#    name: mongo-express-network
+

@@ -67,33 +67,6 @@
       <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/lib/composer" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/lib/private" isTestSource="false" packagePrefix="OC" />
       <sourceFolder url="file://$MODULE_DIR$/nextcloud/www/nextcloud/lib/public" isTestSource="false" packagePrefix="OCP" />
-      <excludeFolder url="file://$MODULE_DIR$/dizquetv" />
-      <excludeFolder url="file://$MODULE_DIR$/bazarr" />
-      <excludeFolder url="file://$MODULE_DIR$/.tmp.driveupload" />
-      <excludeFolder url="file://$MODULE_DIR$/pseudotv" />
-      <excludeFolder url="file://$MODULE_DIR$/overseerr" />
-      <excludeFolder url="file://$MODULE_DIR$/lets-encrypt" />
-      <excludeFolder url="file://$MODULE_DIR$/organizr" />
-      <excludeFolder url="file://$MODULE_DIR$/lidarr" />
-      <excludeFolder url="file://$MODULE_DIR$/ersatztv" />
-      <excludeFolder url="file://$MODULE_DIR$/readarr.old" />
-      <excludeFolder url="file://$MODULE_DIR$/wireguard" />
-      <excludeFolder url="file://$MODULE_DIR$/swag" />
-      <excludeFolder url="file://$MODULE_DIR$/sonarr" />
-      <excludeFolder url="file://$MODULE_DIR$/radarr" />
-      <excludeFolder url="file://$MODULE_DIR$/plex" />
-      <excludeFolder url="file://$MODULE_DIR$/pihole" />
-      <excludeFolder url="file://$MODULE_DIR$/openvpn" />
-      <excludeFolder url="file://$MODULE_DIR$/qbittorrent" />
-      <excludeFolder url="file://$MODULE_DIR$/sabnzbd" />
-      <excludeFolder url="file://$MODULE_DIR$/calibre" />
-      <excludeFolder url="file://$MODULE_DIR$/gluetun" />
-      <excludeFolder url="file://$MODULE_DIR$/audiobookshelf" />
-      <excludeFolder url="file://$MODULE_DIR$/nextcloud" />
-      <excludeFolder url="file://$MODULE_DIR$/nextcloud-data" />
-      <excludeFolder url="file://$MODULE_DIR$/prowlarr" />
-      <excludeFolder url="file://$MODULE_DIR$/readarr" />
-      <excludeFolder url="file://$MODULE_DIR$/tdarr" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

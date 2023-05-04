@@ -34,9 +34,6 @@ find "$CONFIG_PATH" \
 -exec cp --parents {} $dir \;
 
 
-# If the name backup if in the filename or filepaths, copy them toi the backup directory
-# find /media/faiyt/f \( -name "*backup*" -o -path "*/backup/*" \) -exec cp {} $dir \;
-
 # Write the full path of all files in the backup directory to a file
 find $dir -type f > $dir/files_to_be_deleted.txt
 #
